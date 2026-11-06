@@ -1,0 +1,34 @@
+insert into public.categories(name) values ('DSLR Cameras'),('Mirrorless Cameras'),('Compact Cameras'),('Action Cameras'),('Camera Lenses'),('Camera Accessories'),('Tripods'),('Camera Bags') on conflict(name) do nothing;
+insert into public.brands(name) values ('Canon'),('Sony'),('Nikon'),('Fujifilm'),('Panasonic'),('GoPro'),('DJI'),('Peak Design'),('Manfrotto'),('SanDisk') on conflict(name) do nothing;
+with data(name,brand,category,price,stock,description,image_url,specifications) as (values
+('EOS R6 Mark II','Canon','Mirrorless Cameras',8499000,8,'Versatile full-frame mirrorless camera for stills and video.','https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1000&q=85','{"Sensor":"24.2MP Full-Frame CMOS","Video":"4K 60p","Mount":"RF Mount"}'::jsonb),
+('Alpha 7 IV','Sony','Mirrorless Cameras',9299000,6,'Hybrid full-frame camera with advanced autofocus.','https://images.unsplash.com/photo-1516724562728-afc824a36e84?auto=format&fit=crop&w=1000&q=85','{"Sensor":"33MP Full-Frame","Video":"4K 60p","Mount":"E Mount"}'::jsonb),
+('Z f Body','Nikon','Mirrorless Cameras',7999000,5,'Classic styling and modern full-frame performance.','https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&fit=crop&w=1000&q=85','{"Sensor":"24.5MP Full-Frame","Video":"4K UHD","Mount":"Z Mount"}'::jsonb),
+('X-T5 Body','Fujifilm','Mirrorless Cameras',6899000,9,'Compact camera with 40MP resolution and classic controls.','https://images.unsplash.com/photo-1519183071298-a2962be90b8e?auto=format&fit=crop&w=1000&q=85','{"Sensor":"40.2MP APS-C","Video":"6.2K","Mount":"X Mount"}'::jsonb),
+('EOS 90D','Canon','DSLR Cameras',4999000,4,'Responsive DSLR for wildlife, sport and everyday photography.','https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=1000&q=85','{"Sensor":"32.5MP APS-C","Video":"4K UHD","Mount":"EF/EF-S"}'::jsonb),
+('Z 8 Body','Nikon','Mirrorless Cameras',11999000,3,'High-resolution flagship imaging in a travel-ready body.','https://images.unsplash.com/photo-1502982720700-bfff97f2ecac?auto=format&fit=crop&w=1000&q=85','{"Sensor":"45.7MP Full-Frame","Video":"8K UHD","Mount":"Z Mount"}'::jsonb),
+('LUMIX S5II','Panasonic','Mirrorless Cameras',7499000,7,'Hybrid full-frame camera with phase hybrid autofocus.','https://images.unsplash.com/photo-1519638831568-d9897f54ed69?auto=format&fit=crop&w=1000&q=85','{"Sensor":"24.2MP Full-Frame","Video":"6K 30p","Mount":"L Mount"}'::jsonb),
+('HERO12 Black','GoPro','Action Cameras',1699000,14,'Rugged action camera with advanced stabilization.','https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=1000&q=85','{"Video":"5.3K 60p","Waterproof":"10m"}'::jsonb),
+('PowerShot G7 X III','Canon','Compact Cameras',2899000,10,'Pocketable premium compact for travel and streaming.','https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?auto=format&fit=crop&w=1000&q=85','{"Sensor":"20.1MP 1-inch","Video":"4K UHD"}'::jsonb),
+('FE 24-70mm f/2.8 GM II','Sony','Camera Lenses',7999000,4,'Professional standard zoom with exceptional sharpness.','https://images.unsplash.com/photo-1617005082133-548c4dd27f35?auto=format&fit=crop&w=1000&q=85','{"Mount":"Sony E","Aperture":"f/2.8"}'::jsonb),
+('RF 50mm f/1.8 STM','Canon','Camera Lenses',899000,15,'Lightweight bright prime lens for portraits.','https://images.unsplash.com/photo-1616423640778-28d1b53229bd?auto=format&fit=crop&w=1000&q=85','{"Mount":"Canon RF","Aperture":"f/1.8"}'::jsonb),
+('Osmo Pocket 3','DJI','Action Cameras',2199000,11,'Stabilized pocket camera for vlogs and travel.','https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1000&q=85','{"Sensor":"1-inch CMOS","Video":"4K 120p"}'::jsonb),
+('Everyday Backpack 20L','Peak Design','Camera Bags',1299000,12,'Weatherproof carry with configurable camera dividers.','https://images.unsplash.com/photo-1622560480654-d96214fdc887?auto=format&fit=crop&w=1000&q=85','{"Capacity":"20L","Material":"Weatherproof"}'::jsonb),
+('Befree Advanced','Manfrotto','Tripods',1099000,6,'Compact travel tripod with a smooth ball head.','https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=85','{"Load":"8kg","Height":"150cm"}'::jsonb),
+('Extreme PRO 128GB','SanDisk','Camera Accessories',249000,30,'High-speed memory for burst shooting and 4K video.','https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=1000&q=85','{"Capacity":"128GB","Type":"SDXC UHS-I"}'::jsonb)
+) insert into public.products(name,brand_id,category_id,price,stock,description,image_url,specifications)
+select d.name,b.id,c.id,d.price,d.stock,d.description,d.image_url,d.specifications from data d join public.brands b on b.name=d.brand join public.categories c on c.name=d.category
+where not exists(select 1 from public.products p where p.name=d.name);
+
+-- CCD retro digicams. Product photos link to Wikimedia Commons files.
+-- Sony DSC-W80 photo: Keith Hinkle, CC BY 2.0.
+-- Nikon Coolpix S570 photo: José Antonio Gil Martínez, CC BY 2.0.
+-- Nikon Coolpix L12 and Canon SD1000 photos are public domain.
+with data(name,brand,category,price,stock,description,image_url,specifications) as (values
+('Cyber-shot DSC-W80','Sony','Compact Cameras',649000,4,'A pocketable CCD compact with classic Cyber-shot color and a Zeiss 3× optical zoom.','https://commons.wikimedia.org/wiki/Special:FilePath/Sony_Cybershot_DSC-W80.jpg','{"Sensor":"7.2MP CCD","Zoom":"3× optical","Image credit":"Keith Hinkle, CC BY 2.0 — Wikimedia Commons"}'::jsonb),
+('Coolpix L12','Nikon','Compact Cameras',549000,3,'Easy-to-use retro point-and-shoot with a bright 2.5-inch display.','https://commons.wikimedia.org/wiki/Special:FilePath/Nikon_Coolpix-L12.jpg','{"Sensor":"7.1MP CCD","Zoom":"3× optical","Image credit":"Wkatsuhiro, public domain — Wikimedia Commons"}'::jsonb),
+('Coolpix S570','Nikon','Compact Cameras',699000,3,'Slim Coolpix pocket camera with a versatile 5× optical zoom.','https://commons.wikimedia.org/wiki/Special:FilePath/Nikon_Coolpix_S570_(2512020772).jpg','{"Sensor":"12MP CCD","Zoom":"5× optical","Image credit":"José Antonio Gil Martínez, CC BY 2.0 — Wikimedia Commons"}'::jsonb),
+('PowerShot SD1000 Digital ELPH','Canon','Compact Cameras',749000,2,'A slim metal-bodied CCD compact, also sold as the Digital IXUS 70.','https://commons.wikimedia.org/wiki/Special:FilePath/Canon-PowerShot-SD1000.jpg','{"Sensor":"7.1MP CCD","Zoom":"3× optical","Image credit":"Evan-Amos, public domain — Wikimedia Commons"}'::jsonb)
+) insert into public.products(name,brand_id,category_id,price,stock,description,image_url,specifications)
+select d.name,b.id,c.id,d.price,d.stock,d.description,d.image_url,d.specifications from data d join public.brands b on b.name=d.brand join public.categories c on c.name=d.category
+where not exists(select 1 from public.products p where p.name=d.name);
