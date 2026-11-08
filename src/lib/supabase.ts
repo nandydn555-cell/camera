@@ -214,5 +214,8 @@ export async function getOrderPaymentDetails(orderId: string): Promise<{ id: str
 
 export async function markDemoPaymentPaid(orderId: string): Promise<void> {
   const { error } = await requireSupabase().rpc('complete_demo_payment', { p_order_id: orderId });
+  if (error?.code === 'PGRST202') {
+    throw new Error('Demo payment is not configured in the database. Apply migration 202611060004_demo_payment_simulation.sql in Supabase SQL Editor, then try again.');
+  }
   if (error) throw error;
 }

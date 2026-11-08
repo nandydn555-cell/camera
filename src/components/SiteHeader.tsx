@@ -25,13 +25,13 @@ export default function SiteHeader() {
 
   return (
     <header className="topbar">
-      <button className="hamburger" onClick={() => setMobileOpen((open) => !open)} aria-label={mobileOpen ? 'Close menu' : 'Open menu'} aria-expanded={mobileOpen}>
+      <button type="button" className="hamburger" onClick={() => setMobileOpen((open) => !open)} aria-label={mobileOpen ? 'Close menu' : 'Open menu'} aria-expanded={mobileOpen} aria-controls="main-navigation">
         {mobileOpen ? <X /> : <Menu />}
       </button>
       <Link className="wordmark" to="/" aria-label="Lensline home">
         <span className="mark"><Camera size={19} /></span> LENS<span>LINE</span>
       </Link>
-      <nav className={mobileOpen ? 'nav open' : 'nav'} aria-label="Main navigation">
+      <nav id="main-navigation" className={mobileOpen ? 'nav open' : 'nav'} aria-label="Main navigation">
         {navItems.map(({ to, label, end }) => (
           <NavLink key={to} to={to} end={end} onClick={() => setMobileOpen(false)} className={({ isActive }) => `navlink ${isActive ? 'active' : ''}`}>
             {label}
